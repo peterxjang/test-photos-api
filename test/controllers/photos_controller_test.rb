@@ -15,4 +15,21 @@ class PhotosControllerTest < ActionDispatch::IntegrationTest
       assert_response 200
     end
   end
+
+  test "show" do
+    get "/photos/#{Photo.first.id}.json"
+    assert_response 200
+
+    data = JSON.parse(response.body)
+    assert_equal ["id", "name", "width", "height", "created_at", "updated_at"], data.keys
+  end
+
+  test "update" do
+    photo = Photo.first
+    patch "/photos/#{photo.id}.json", params: { name: "Updated name" }
+    assert_response 200
+
+    data = JSON.parse(response.body)
+    assert_equal "Updated name", data["name"]
+  end
 end
