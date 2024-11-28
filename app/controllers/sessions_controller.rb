@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      cookies.signed[:user_id] = { value: user.id, httponly: true }
+      cookies.signed[:user_id] = { value: user.id, httponly: true, secure: true, same_site: "None" }
       render json: { email: user.email, user_id: user.id }, status: :created
     else
       render json: {}, status: :unauthorized
