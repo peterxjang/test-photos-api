@@ -1,7 +1,11 @@
 class PhotosController < ApplicationController
   def index
-    @photos = Photo.all
-    render :index
+    if current_user
+      @photos = Photo.all
+      render :index
+    else
+      render json: []
+    end
   end
 
   def create
