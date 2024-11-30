@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    cookies.delete(:user_id)
+    cookies.delete(:user_id, secure: true, same_site: "None")
     render json: { message: "Logged out successfully" }
   end
 end
