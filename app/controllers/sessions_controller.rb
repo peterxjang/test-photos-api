@@ -2,7 +2,11 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      cookies.signed[:user_id] = { value: user.id, httponly: true, secure: true, same_site: "None" }
+      cookie_options = { value: user.id, httponly: true }
+      cookie_options[:secure] = true if Rails.env.production?
+      cookie_options[:same_site] = "None" if Rails.env.production?
+      cookies.signed[:user_id] = cookie_options
+
       render json: { email: user.email, user_id: user.id }, status: :created
     else
       render json: {}, status: :unauthorized
@@ -10,7 +14,11 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    cookies.delete(:user_id, secure: true, same_site: "None")
+    cookie_options = {}
+    cookie_options[:secure] = true if Rails.env.production?
+    cookie_options[:same_site] = "None" if Rails.env.production?
+    cookies.delete(:user_id, cookie_options)
+
     render json: { message: "Logged out successfully" }
   end
 end

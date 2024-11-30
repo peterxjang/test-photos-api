@@ -2,6 +2,8 @@ require "test_helper"
 
 class PhotosControllerTest < ActionDispatch::IntegrationTest
   test "index" do
+    post "/users.json", params: { name: "test", email: "test@example.com", password: "password" }
+    post "/sessions.json", params: { email: "test@example.com", password: "password" }
     get "/photos.json"
     assert_response 200
 
